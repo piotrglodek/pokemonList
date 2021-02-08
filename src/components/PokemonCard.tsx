@@ -56,7 +56,6 @@ const useStyles = makeStyles((theme: Theme) =>
         fill: 'rgba(255, 255, 255, 0.2)',
       },
       [theme.breakpoints.up('md')]: {
-        paddingLeft: '30px',
         '& > svg': {
           height: '180px',
           width: '180px',
