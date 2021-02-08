@@ -17,13 +17,14 @@ export default function App(): ReactElement {
   const [fetchLoading, setFetchLoading] = useState<boolean>(true);
   const [fetchError, setFetchError] = useState<any | null>(null);
   const [isFetchingMore, setIsFetchingMore] = useState<boolean>(false);
-  const [offset, setOffest] = useState<number>(api.offset);
+  const [offset, setOffest] = useState<number>(9);
+  const [limit, setLimit] = useState<number>(9);
   const [pokemonQuery, setPokemonQuery] = useState<string>('');
 
   const handleFetchPokemons = async () => {
     try {
       const data = await (
-        await fetch(`${api.url}pokemon?limit=${api.limit}`)
+        await fetch(`${api.url}pokemon?limit=${limit}`)
       ).json();
 
       setPokemons(data.results);
@@ -38,11 +39,11 @@ export default function App(): ReactElement {
     setIsFetchingMore(true);
     try {
       const data = await (
-        await fetch(`${api.url}pokemon?limit=${api.limit}&offset=${offset}`)
+        await fetch(`${api.url}pokemon?limit=${limit}&offset=${offset}`)
       ).json();
 
       setPokemons(prevState => [...prevState, ...data.results]);
-      setOffest(prevState => prevState + api.offset);
+      setOffest(prevState => prevState + limit);
       setIsFetchingMore(false);
     } catch (error) {
       setFetchError(error);
@@ -68,7 +69,7 @@ export default function App(): ReactElement {
     } else {
       handleFetchPokemons();
     }
-  }, [pokemonQuery]);
+  }, [pokemonQuery, limit]);
 
   return (
     <Switch>
@@ -81,6 +82,9 @@ export default function App(): ReactElement {
           handleFetchMorePokemons={handleFetchMorePokemons}
           isFetchingMore={isFetchingMore}
           fetchError={fetchError}
+          limit={limit}
+          setLimit={setLimit}
+          setOffset={setOffest}
         />
       </Route>
       <Route path='/pokemon/:name'>
