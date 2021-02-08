@@ -3,7 +3,15 @@ import { ReactElement } from 'react';
 import Header from '../components/Header';
 import PokemonCard from '../components/PokemonCard';
 // MUI
-import { CircularProgress, Typography, Button } from '@material-ui/core';
+import {
+  CircularProgress,
+  Typography,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from '@material-ui/core';
 import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 // Inteface
 import { PokemonsData } from '../App';
@@ -51,6 +59,12 @@ const useStyles = makeStyles((theme: Theme) =>
       marginTop: -12,
       marginLeft: -12,
     },
+    topContainer: {
+      marginBottom: theme.spacing(3),
+    },
+    formControl: {
+      minWidth: 120,
+    },
   })
 );
 
@@ -62,6 +76,9 @@ interface Props {
   handleFetchMorePokemons: () => Promise<void>;
   isFetchingMore: boolean;
   fetchError: any;
+  limit: number;
+  setLimit: React.Dispatch<React.SetStateAction<number>>;
+  setOffset: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export default function Home(props: Props): ReactElement {
@@ -73,8 +90,16 @@ export default function Home(props: Props): ReactElement {
     handleFetchMorePokemons,
     isFetchingMore,
     fetchError,
+    limit,
+    setLimit,
+    setOffset,
   } = props;
   const classes = useStyles();
+
+  const handlePokemonsPerPage = (e: React.ChangeEvent<{ value: unknown }>) => {
+    setLimit(e.target.value as number);
+    setOffset(e.target.value as number);
+  };
   return (
     <>
       <Header pokemonQuery={pokemonQuery} setPokemonQuery={setPokemonQuery} />
@@ -88,9 +113,27 @@ export default function Home(props: Props): ReactElement {
           </Typography>
         ) : (
           <>
+            <div className={classes.topContainer}>
+              <FormControl className={classes.formControl}>
+                <InputLabel id='pokemonPerLoad-label'>
+                  Pokemons limit
+                </InputLabel>
+                <Select
+                  labelId='pokemonPerLoad-label'
+                  id='pokemonPerPageSelect'
+                  value={limit}
+                  onChange={handlePokemonsPerPage}
+                >
+                  <MenuItem value={9}>9</MenuItem>
+                  <MenuItem value={18}>18</MenuItem>
+                  <MenuItem value={32}>32</MenuItem>
+                  <MenuItem value={64}>64</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
             <div className={classes.grid}>
-              {pokemons.map(item => (
-                <PokemonCard key={item.name} name={item.name} />
+              {pokemons.map((item, i) => (
+                <PokemonCard key={i} name={item.name} />
               ))}
             </div>
             {pokemonQuery === '' && (
