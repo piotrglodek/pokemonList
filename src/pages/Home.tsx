@@ -79,6 +79,7 @@ interface Props {
   limit: number;
   setLimit: React.Dispatch<React.SetStateAction<number>>;
   setOffset: React.Dispatch<React.SetStateAction<number>>;
+  handleSearchPokemon: () => Promise<void>;
 }
 
 export default function Home(props: Props): ReactElement {
@@ -93,6 +94,7 @@ export default function Home(props: Props): ReactElement {
     limit,
     setLimit,
     setOffset,
+    handleSearchPokemon,
   } = props;
   const classes = useStyles();
 
@@ -102,7 +104,11 @@ export default function Home(props: Props): ReactElement {
   };
   return (
     <>
-      <Header pokemonQuery={pokemonQuery} setPokemonQuery={setPokemonQuery} />
+      <Header
+        pokemonQuery={pokemonQuery}
+        setPokemonQuery={setPokemonQuery}
+        handleSearchPokemon={handleSearchPokemon}
+      />
       <div className={classes.container}>
         {fetchLoading ? (
           <CircularProgress />
@@ -133,7 +139,7 @@ export default function Home(props: Props): ReactElement {
             </div>
             <div className={classes.grid}>
               {pokemons.map((item, i) => (
-                <PokemonCard key={i} name={item.name} />
+                <PokemonCard key={item.name} name={item.name} />
               ))}
             </div>
             {pokemonQuery === '' && (
