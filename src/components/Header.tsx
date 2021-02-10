@@ -55,12 +55,13 @@ const useStyles = makeStyles((theme: Theme) =>
 interface Props {
   pokemonQuery: string;
   setPokemonQuery: React.Dispatch<React.SetStateAction<string>>;
+  handleSearchPokemon: () => Promise<void>;
 }
 
 export default function Header(props: Props): ReactElement {
   const classes = useStyles();
 
-  const { pokemonQuery, setPokemonQuery } = props;
+  const { pokemonQuery, setPokemonQuery, handleSearchPokemon } = props;
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     let {
@@ -88,6 +89,11 @@ export default function Header(props: Props): ReactElement {
             value={pokemonQuery}
             onChange={handleSearch}
             type='text'
+            onKeyPress={event => {
+              if (event.key === 'Enter') {
+                handleSearchPokemon();
+              }
+            }}
           />
         </div>
       </Toolbar>

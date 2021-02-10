@@ -64,9 +64,7 @@ export default function App(): ReactElement {
   };
 
   useEffect(() => {
-    if (pokemonQuery.length >= 2) {
-      handleSearchPokemon();
-    } else {
+    if (pokemonQuery.length === 0) {
       handleFetchPokemons();
     }
   }, [pokemonQuery, limit]);
@@ -85,6 +83,7 @@ export default function App(): ReactElement {
           limit={limit}
           setLimit={setLimit}
           setOffset={setOffest}
+          handleSearchPokemon={handleSearchPokemon}
         />
       </Route>
       <Route path='/pokemon/:name'>
